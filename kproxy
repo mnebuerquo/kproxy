@@ -7,6 +7,7 @@
 # For automatic proxy detection/configuration for new terminal windows, add a
 # call to detectsetproxy in .bashrc or .profile after sourcing this file.
 
+{ # ensure entire file is downloaded before it can be executed
 
 function detectproxy() {
 	# Detect if we are behind a proxy or not.
@@ -113,3 +114,5 @@ function detectsetproxy() {
 		setproxy
 	fi
 }
+
+} # protect against executing partially downloaded file
