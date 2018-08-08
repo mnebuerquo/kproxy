@@ -2,24 +2,26 @@
 
 # Proxy configuration for running behind a corp firewall. This is intended to be 
 # sourced from your .bashrc or .profile.
+# https://github.com/mnebuerquo/kproxy
 #
 # For automatic proxy detection/configuration for new terminal windows, add a
 # call to detectsetproxy in .bashrc or .profile after sourcing this file.
 
+
 function detectproxy() {
-	# try curl with no proxy setting and see if we can get to google
-	# if not, we need our proxy setting, else we don't
+	# Detect if we are behind a proxy or not.
+	# Try curl with no proxy setting and see if we can get to google.
+	# If not, we need our proxy setting, else we don't.
 	# https://superuser.com/a/1311499/26022
-	URL='www.google.com'
-
+	URL='https://www.google.com'
 	curl --noproxy '*' -s -m 2 $URL > /dev/null
-
 	if [ $? -eq 0 ]; then
 		return 0
 	else
 		return 1
 	fi
 }
+
 
 # This section is for urlencode for keeping your proxy password obfuscated in
 # your environment variable. This is so if you are doing pair programming or
@@ -37,6 +39,7 @@ EOF
 }
 urlencode() { printf "$*" | urlencodepipe ;}
 
+
 function makeproxypass() {
 	# Ideally this would encrypt the password in the file, but it's not
 	# happening yet. You'd need a key or password to decrypt anyway which
@@ -53,6 +56,10 @@ function makeproxypass() {
 }
 
 function setproxy() {
+	# This is the routine which enables all the proxy variables. If you have
+	# something else you use that needs proxy variables, add it here. We prefer
+	# environment variables to set these because they don't fail if the tool
+	# using them isn't installed yet.
 	PROXY_USER=$(whoami)
 	PROXY_PASS=$(urlencode $(openssl base64 -d < ~/.proxy_pass))
 	PROXY_HOST=`cat ~/.proxy_host`
@@ -71,6 +78,8 @@ function setproxy() {
 }
 
 function unsetproxy() {
+	# Do this when you are no longer behind the proxy. Just unset all the proxy
+	# variables.
 	unset {http,https,no}_proxy
 	unset VAGRANT_HTTP_PROXY
 	unset VAGRANT_HTTPS_PROXY
@@ -81,10 +90,12 @@ function unsetproxy() {
 }
 
 function proxyon() {
+	# This is an easier to remember version of the function.
 	setproxy
 }
 
 function proxyoff() {
+	# This is an easier to remember version of the function.
 	unsetproxy
 }
 

@@ -1,5 +1,6 @@
 # kproxy
-A script for enabling or disabling proxy settings for your shell
+A script for enabling or disabling proxy settings for your shell when you are
+behind a corporate proxy.
 
 # Usage
 
