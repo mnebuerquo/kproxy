@@ -56,7 +56,7 @@ function makeproxypass() {
 	echo $str | openssl base64 > ~/.proxy_pass
 }
 
-function setproxy() {
+function proxy_on() {
 	# This is the routine which enables all the proxy variables. If you have
 	# something else you use that needs proxy variables, add it here. We prefer
 	# environment variables to set these because they don't fail if the tool
@@ -68,6 +68,7 @@ function setproxy() {
 		echo "Proxy host not set. Edit ~/.proxy_host to add <host>:<port> string."
 		return 1
 	fi
+	# TODO: make separate http/https configurations
 	export {http,https}_proxy="http://$PROXY_USER:$PROXY_PASS@$PROXY_HOST"
 	export no_proxy="*.local, 169.254/16, localhost, 127.0.0.1"
 	export VAGRANT_HTTP_PROXY="${http_proxy}"
@@ -79,7 +80,7 @@ function setproxy() {
 	export DOCKER_LOCAL_REGISTRY=`cat ~/.docker_registry_url`
 }
 
-function unsetproxy() {
+function proxy_off() {
 	# Do this when you are no longer behind the proxy. Just unset all the proxy
 	# variables.
 	unset {http,https,no}_proxy
@@ -92,15 +93,8 @@ function unsetproxy() {
 	unset DOCKER_LOCAL_REGISTRY
 }
 
-function proxyon() {
-	# This is an easier to remember version of the function.
-	setproxy
-}
-
-function proxyoff() {
-	# This is an easier to remember version of the function.
-	unsetproxy
-}
+alias proxyon="proxy_on"
+alias proxyoff="proxy_off"
 
 function detectsetproxy() {
 	# See if we need to set proxy settings, then set them if we do
@@ -108,12 +102,12 @@ function detectsetproxy() {
 	# If we can not connect, then we need the proxy.
 	# This will set up the proxy wrongly in cases where we do not have proper
 	# connectivity, because this script can not tell the difference.
-	unsetproxy
+	proxy_off
 	detectproxy
 	if [ $? -eq 0 ]; then
-		unsetproxy
+		proxy_off
 	else
-		setproxy
+		proxy_on
 	fi
 }
 

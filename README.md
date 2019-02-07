@@ -31,13 +31,13 @@ Now you can enable or disable your proxy environment variables with a shell
 command:
 
 ```sh
-proxyon
+proxy_on
 ```
 
 or 
 
 ```sh
-proxyoff
+proxy_off
 ```
 
 There is also an automatic detection function for turning on the proxy settings
