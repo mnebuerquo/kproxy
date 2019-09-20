@@ -1,6 +1,17 @@
 # kproxy
 A script for enabling or disabling proxy settings for your shell when you are
-behind a corporate proxy.
+behind a proxy.
+
+You probably don't want to use this on a multi-user machine, because it stores
+credentials on disk. It's intended to be safer than the methods I've seen in
+use, which store `user:password` in the `http_proxy` environment variable, and
+in the `.bash_profile` to set it on login.
+These can be urlencoded, but are typically plain text. If you are in a pair
+programming session on your machine, you might accidentally display your
+environment variables, and you don't want your password readable at a glance.
+
+*Note:* Obfuscating a password is not security against an attacker. You're
+still storing credentials on disk, so use at your own risk.
 
 # Usage
 
