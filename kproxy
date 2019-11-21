@@ -92,6 +92,24 @@ function proxy_on() {
 	export DOCKER_LOCAL_REGISTRY=`cat ~/.docker_registry_url`
 }
 
+function mrproxy() {
+	# store values of various proxy variables to a file to freeze settings
+	FILE=~/.mr_proxy
+	echo "#!/bin/sh" > "${FILE}"
+	echo "# This file is generated, no need to edit manually, run mrproxy instead." >> "${FILE}"
+	echo "export {http,https,ftp,rsync}_proxy=\"${http_proxy}\"" >> "${FILE}"
+	echo "export {HTTP,HTTPS,FTP,RSYNC}_PROXY=\"${http_proxy}\"" >> "${FILE}"
+	echo "export no_proxy=`cat ~/.proxy_noproxy`" >> "${FILE}"
+	echo "export VAGRANT_HTTP_PROXY=\"${http_proxy}\"" >> "${FILE}"
+	echo "export VAGRANT_HTTPS_PROXY=\"${http_proxy}\"" >> "${FILE}"
+	echo "export VAGRANT_FTP_PROXY=\"${http_proxy}\"" >> "${FILE}"
+	echo "export VAGRANT_NO_PROXY=\"${no_proxy}\"" >> "${FILE}"
+	echo "export NPM_CONFIG_PROXY=\"${http_proxy}\"" >> "${FILE}"
+	echo "export NPM_CONFIG_HTTPS_PROXY=\"${https_proxy}\"" >> "${FILE}"
+	echo "export DOCKER_LOCAL_REGISTRY=`cat ~/.docker_registry_url`" >> "${FILE}"
+	echo "# fin" >> "${FILE}"
+}
+
 function proxy_off() {
 	# Do this when you are no longer behind the proxy. Just unset all the proxy
 	# variables.
