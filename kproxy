@@ -74,7 +74,8 @@ function proxy_on() {
 		return 1
 	fi
 	# TODO: make separate http/https configurations
-	export {http,https}_proxy="http://$PROXY_USER:$PROXY_PASS@$PROXY_HOST"
+	export {http,https,ftp,rsync}_proxy="http://$PROXY_USER:$PROXY_PASS@$PROXY_HOST"
+	export {HTTP,HTTPS,FTP,RSYNC}_PROXY="$http_proxy"
 	export no_proxy=`cat ~/.proxy_noproxy`
 	export VAGRANT_HTTP_PROXY="${http_proxy}"
 	export VAGRANT_HTTPS_PROXY="${http_proxy}"
