@@ -61,21 +61,27 @@ function proxy_on() {
 	# something else you use that needs proxy variables, add it here. We prefer
 	# environment variables to set these because they don't fail if the tool
 	# using them isn't installed yet.
-	if [ -f "~/.proxy_user" ]; then
+	if [ -f ~/.proxy_user ]; then
 		PROXY_USER=`cat ~/.proxy_user`
-	fi
-	if [ -z "$PROXY_USER" ]; then
-		PROXY_USER=$(whoami)
+	else
+		if [ -z "$PROXY_USER" ]; then
+			PROXY_USER=$(whoami)
+		fi
 	fi
 	PROXY_PASS=$(urlencode $(openssl base64 -d < ~/.proxy_pass))
+	if [ -z "${PROXY_USER}${PROXY_PASS}" ]; then
+		PROXY_AUTH=""
+	else
+		PROXY_AUTH="$PROXY_USER:$PROXY_PASS@"
+	fi
 	PROXY_HOST=`cat ~/.proxy_host`
 	if [ -z "${PROXY_HOST}" ]; then
 		echo "Proxy host not set. Edit ~/.proxy_host to add <host>:<port> string."
 		return 1
 	fi
 	# TODO: make separate http/https configurations
-	export {http,https,ftp,rsync}_proxy="http://$PROXY_USER:$PROXY_PASS@$PROXY_HOST"
-	export {HTTP,HTTPS,FTP,RSYNC}_PROXY="$http_proxy"
+	export {http,https,ftp,rsync}_proxy="http://${PROXY_AUTH}${PROXY_HOST}"
+	export {HTTP,HTTPS,FTP,RSYNC}_PROXY="${http_proxy}"
 	export no_proxy=`cat ~/.proxy_noproxy`
 	export VAGRANT_HTTP_PROXY="${http_proxy}"
 	export VAGRANT_HTTPS_PROXY="${http_proxy}"
