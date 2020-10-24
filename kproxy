@@ -114,6 +114,7 @@ function proxy_off() {
 	# Do this when you are no longer behind the proxy. Just unset all the proxy
 	# variables.
 	unset {http,https,no}_proxy
+	unset {HTTP,HTTPS,NO}_PROXY
 	unset VAGRANT_HTTP_PROXY
 	unset VAGRANT_HTTPS_PROXY
 	unset VAGRANT_FTP_PROXY
